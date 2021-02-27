@@ -1,9 +1,9 @@
 const db = require('../models')
 const User = db.users
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 function loginUser(req, res, next) {
-    
     if(req.body.username) {
         User.findOne({
             where: {
@@ -12,6 +12,11 @@ function loginUser(req, res, next) {
         })
             .then(data => {
                 if(bcrypt.compareSync(req.body.password, data.password)) {
+                    let payload = {
+                        id: data.id,
+                        username: data.username,
+                    }
+                    const token = jwt.sign(payload, process.env.JWT_TOKEN)
                     req.session.loggedin = true
                     req.session.username = req.body.username
                     res.redirect('/dashboard')

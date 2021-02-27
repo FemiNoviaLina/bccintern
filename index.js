@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const session = require('express-session')
 const db = require('./models')
+const jwtMiddleware = require('./middlewares/jwtAuth')
 const errorHandler = require('./utils/errorHandler')
 
 db.sequelize.sync({ })
@@ -24,7 +25,7 @@ app.use('/login', loginRoutes)
 
 app.use(errorHandler)
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', jwtMiddleware, (req, res) => {
     if (req.session.loggedin) {
         res.send('Welcome back, ' + req.session.username + '!');
     } else {
