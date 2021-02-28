@@ -19,7 +19,7 @@ function loginUser(req, res, next) {
                     const token = jwt.sign(payload, process.env.JWT_TOKEN)
                     req.session.loggedin = true
                     req.session.username = req.body.username
-                    res.status(200).send(data)
+                    res.status(200).send({data, token})
                 } else {
                     next({statusCode: 400, message: 'wrong password'})
                 }

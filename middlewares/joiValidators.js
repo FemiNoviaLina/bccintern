@@ -12,7 +12,8 @@ function joiValidator(req, res, next) {
     }
 
     let route = req.originalUrl.split("/")
-    route.unshift("")
+    route.unshift()
+    console.log(route)
     const method = req.method.toLowerCase()
 
     if(_.includes(_supportedMethods, method) && _.hasIn(Schemas, route)){

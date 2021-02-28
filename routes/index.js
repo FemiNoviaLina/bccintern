@@ -4,7 +4,7 @@ const registerController = require('../controllers/register.controller')
 const joiMiddleware = require('../middlewares/joiValidators')
 const jwtMiddleware = require('../middlewares/jwtAuth')
 
-app.post('/', joiMiddleware, registerController.registerUser)
+app.post('/register', joiMiddleware, registerController.registerUser)
 
 app.post('/login', joiMiddleware, loginController.loginUser)
 
