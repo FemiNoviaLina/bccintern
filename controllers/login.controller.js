@@ -21,11 +21,11 @@ function loginUser(req, res, next) {
                     req.session.username = req.body.username
                     res.status(200).send({data, token})
                 } else {
-                    next({statusCode: 400, message: 'wrong password'})
+                    next({statusCode: 400, message: 'Wrong password'})
                 }
             })
             .catch(err => {
-                next()
+                next("Username not found")
             })
     } else {
         res.send('Please enter Username and Password!');

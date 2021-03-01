@@ -13,7 +13,7 @@ function joiValidator(req, res, next) {
 
     let route = req.originalUrl.split("/")
     route.unshift()
-    console.log(route)
+    //console.log(route)
     const method = req.method.toLowerCase()
 
     if(_.includes(_supportedMethods, method) && _.hasIn(Schemas, route)){
@@ -27,7 +27,7 @@ function joiValidator(req, res, next) {
                 const JoiError = {
                     success : false,
                     error : {
-                        details : _.map(error.errors,({message , type})=>({
+                        details : _.map(error.details,({message , type})=>({
                             message,
                             type
                         }))
