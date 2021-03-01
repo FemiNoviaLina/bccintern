@@ -2,4 +2,8 @@
 
 cd /var/app/current/;
 
-npm install;
+. ~/.nvm/nvm.sh;
+
+nvm install 14 --lts;
+
+npm ci;
