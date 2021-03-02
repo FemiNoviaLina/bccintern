@@ -3,6 +3,21 @@ const User = db.users
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+function registerUser(req, res, next) {
+    User.create(req.body)
+        .then(data => {
+            let payload = {
+                id: data.id,
+                username: data.username,
+            }
+            const token = jwt.sign(payload, process.env.JWT_TOKEN)
+            res.status(200).send({data, token})
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 function loginUser(req, res, next) {
     if(req.body.username) {
         User.findOne({
@@ -17,8 +32,6 @@ function loginUser(req, res, next) {
                         username: data.username,
                     }
                     const token = jwt.sign(payload, process.env.JWT_TOKEN)
-                    req.session.loggedin = true
-                    req.session.username = req.body.username
                     res.status(200).send({data, token})
                 } else {
                     next({statusCode: 400, message: 'Wrong password'})
@@ -32,6 +45,20 @@ function loginUser(req, res, next) {
     }
 }
 
+function clearAllUser(req, res, next) {
+    User.destroy({truncate: true})
+        .then(resolved => {
+            res.status(200).send({
+                message: `cleared successfully`
+            })
+        })
+        .catch(reject => {
+            next('cannot clear')
+        })
+}
+
 module.exports = {
-    loginUser
+    registerUser,
+    loginUser,
+    clearAllUser
 }

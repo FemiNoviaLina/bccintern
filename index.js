@@ -1,24 +1,24 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const session = require('express-session')
 const db = require('./models')
 const errorHandler = require('./utils/errorHandler')
+const cors = require('cors')
 
 db.sequelize.sync({ })
 
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-}))
+app.use(cors())
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-const routes = require('./routes')
+const routes = require('./routes/user.routes')
 
-app.use('/', routes)
+app.use('/user', routes)
+
+app.use('/', (req, res) => {
+    res.send({message: 'Welcome'})
+})
 
 app.use(errorHandler)
 
