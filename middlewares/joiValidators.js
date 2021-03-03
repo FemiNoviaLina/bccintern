@@ -7,13 +7,13 @@ function joiValidator(req, res, next) {
 
     const _validationOptions = {
         abortEarly : false,
-        // allowUnknown : true,
-        // stripUknwon : true,
+        allowUnknown : true,
+        stripUknwon : true,
     }
 
     let route = req.originalUrl.split("/")
     route.shift()
-    console.log(route)
+    //console.log(route)
     const method = req.method.toLowerCase()
 
     if(_.includes(_supportedMethods, method) && _.hasIn(Schemas, route)){

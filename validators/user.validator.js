@@ -8,12 +8,6 @@ const registerSchema = Joi.object().keys({
             })
         .required(),
 
-    name: Joi.string()
-        .regex(/^[a-z A-Z]+$/)
-        .min(3)
-        .max(20)
-        .required(),
-
     username: Joi.string()
         .alphanum()
         .min(3)
@@ -23,7 +17,7 @@ const registerSchema = Joi.object().keys({
     password: Joi.string()
         .alphanum()
         .min(8)
-        .pattern(new RegExp('^[a-zA-Z0-9]'))
+        .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z]).{8,}$'))
         .required()
         .strict(),
 
@@ -43,7 +37,6 @@ const loginSchema = Joi.object().keys({
     password: Joi.string()
         .alphanum()
         .min(8)
-        .pattern(new RegExp('^[a-zA-Z0-9]'))
         .required()
         .strict()
 })

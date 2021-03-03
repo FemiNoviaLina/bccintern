@@ -17,7 +17,7 @@ const routes = require('./routes/user.routes')
 app.use('/user', routes)
 
 app.use('/', (req, res) => {
-    res.send({message: 'Welcome'})
+    res.send({message: 'It\'s running!'})
 })
 
 app.use(errorHandler)
