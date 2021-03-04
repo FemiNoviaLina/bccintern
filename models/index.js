@@ -14,9 +14,20 @@ const sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASS, {
 })
 
 const users = require('./user.models')(sequelize, Sequelize)
+const jobs = require('./job.models')(sequelize, Sequelize)
+const mentors = require('./mentor.models')(sequelize, Sequelize)
+
+users.hasMany(jobs, {as: 'CreatedBy', foreignKey : 'createdById'})
+users.hasMany(jobs, {as: 'DoneBy', foreignKey : 'doneById'})
+jobs.belongsTo(users, {onDelete : 'cascade', onUpdate : 'cascade'})
+
+mentors.hasMany(users, {as: 'user', foreignKey: 'userId'})
+users.belongsTo(mentors, {onDelete: 'cascade', onUpdate: 'cascade'})
 
 module.exports =  {
     sequelize,
     Sequelize,
-    users
+    users,
+    jobs,
+    mentors
 }

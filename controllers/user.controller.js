@@ -45,20 +45,31 @@ function loginUser(req, res, next) {
     }
 }
 
+function showUserById(req, res, next) {
+    User.findByPk(req.params.id)
+        .then(data => {
+            res.status(200).send(data)
+        })
+        .catch(err => {
+            next('User not found')
+        })
+}
+
 function clearAllUser(req, res, next) {
-    User.destroy({truncate: true})
+    User.destroy({where:{}})
         .then(resolved => {
             res.status(200).send({
                 message: `cleared successfully`
             })
         })
         .catch(reject => {
-            next('cannot clear')
+            next(reject)
         })
 }
 
 module.exports = {
     registerUser,
     loginUser,
+    showUserById,
     clearAllUser
 }

@@ -5,16 +5,18 @@ const db = require('./models')
 const errorHandler = require('./utils/errorHandler')
 const cors = require('cors')
 
-db.sequelize.sync({ })
+db.sequelize.sync({})
 
 app.use(cors())
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-const routes = require('./routes/user.routes')
+const userRoutes = require('./routes/user.routes')
+const jobRoutes = require('./routes/job.routes')
 
-app.use('/user', routes)
+app.use('/user', userRoutes)
+app.use('/job', jobRoutes)
 
 app.use('/', (req, res) => {
     res.send({message: 'It\'s running!'})

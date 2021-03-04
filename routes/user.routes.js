@@ -7,6 +7,8 @@ router.post('/register', joiMiddleware, userController.registerUser)
 
 router.post('/login', joiMiddleware, userController.loginUser)
 
-router.delete('/cleardb', userController.clearAllUser)
+router.get('/getUser/:id', jwtMiddleware, userController.showUserById)
+
+router.delete('/clearUserDb', userController.clearAllUser)
 
 module.exports = router

@@ -7,11 +7,13 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             unique: true
         },
+
         username: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true
         },
+
         password: {
             type: Sequelize.STRING,
             allowNull: false,
