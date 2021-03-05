@@ -52,7 +52,7 @@ function jobBySalary(req, res, next) {
         })
 }
 
-function takeJob(req, res, next) {
+function getJob(req, res, next) {
     Job.findByPk(req.params.id) 
         .then(data => {
             data.doneById = req.user.id
@@ -81,6 +81,6 @@ module.exports = {
     showAllJob,
     jobByCategory,
     jobBySalary,
-    takeJob,
+    getJob,
     clearAllJobs
 }

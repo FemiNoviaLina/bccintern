@@ -11,6 +11,26 @@ function inputMentor(req, res, next) {
         })
 }
 
+function viewMentor(req, res, next) {
+    Mentor.findOne(req.params.id)
+        .then(data => {
+            res.status(200).send(data)
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
+function showAllMentor(req, res, next) {
+    Mentor.findAll()
+        .then(data => {
+            res.status(200).send(data)
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 function clearAllMentor(req, res, next) {
     Mentor.destroy({truncate: true})
         .then(resolved => {
@@ -25,5 +45,7 @@ function clearAllMentor(req, res, next) {
 
 module.exports = {
     inputMentor,
+    viewMentor,
+    showAllMentor,
     clearAllMentor
 }
