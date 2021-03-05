@@ -4,16 +4,15 @@ const mentorSchema = Joi.object().keys({
     name: Joi.string()
         .required(),
     
-    occupation: Joi.string
+    occupation: Joi.string()
         .required(),
 
-    skill: Joi.string
+    skill: Joi.string()
         .required(),
 
     resume: Joi.string(),
 
     fee: Joi.number()
-        .Joi.integer()
         .min(0)
         .required()
 })

@@ -7,7 +7,7 @@ router.post('/addMentor/', mentorController.inputMentor)
 
 router.get('/viewMentor/:id', jwtMiddleware, mentorController.viewMentor)
 
-router.get('/showAllMentor', mentorController.showAllMentor)
+router.get('/showAll', mentorController.showAllMentor)
 
 router.delete('/clearMentorDb', mentorController.clearAllMentor)
 

@@ -9,11 +9,9 @@ const jobSchema = Joi.object().keys({
     
     location: Joi.string(),
 
-    duration: Joi.number()
-            .Joi.integer(),
+    duration: Joi.number(),
     
     fee: Joi.number()
-        .Joi.integer()
         .min(0)
         .required(),
 
