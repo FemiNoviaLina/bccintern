@@ -13,6 +13,10 @@ router.get('/searchBySalary/:minFee/:maxFee', jobController.jobBySalary)
 
 router.get('/apply/:id', jwtMiddleware, jobController.applyJob)
 
+router.get('/allJobByUser/:userId', jobController.allJobByUser)
+
+router.get('/viewApplier/:id', jwtMiddleware, jobController.viewApplier)
+
 router.get('/setWorker/:jobId/:userId', jwtMiddleware, jobController.setWorker)
 
 router.delete('/clearJobDb', jobController.clearAllJobs)

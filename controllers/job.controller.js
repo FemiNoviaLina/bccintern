@@ -74,6 +74,29 @@ function applyJob(req, res, next) {
         })    
 }
 
+function allJobByUser(req, res, next) {
+    Job.findAll({where: {createdById: req.params.userId}})
+        .then(data => {
+            if(data != null) res.status(200).send(data)
+            else res.send({message: 'No job created by this user'})
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
+function viewApplier(req, res, next) {
+    Job.findByPk(req.params.id)
+        .then(data => {
+            let applier = data.applier.split('-')
+            applier.splice(0, 2)
+            res.status(200).send(applier)
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 function setWorker(req, res, next) {
     Job.findByPk(req.params.jobId)
         .then(data => {
@@ -104,6 +127,8 @@ module.exports = {
     jobByCategory,
     jobBySalary,
     applyJob,
+    allJobByUser,
+    viewApplier,
     setWorker,
     clearAllJobs
 }
