@@ -12,9 +12,10 @@ function inputMentor(req, res, next) {
 }
 
 function viewMentor(req, res, next) {
-    Mentor.findOne(req.params.id)
+    Mentor.findByPk(req.params.id)
         .then(data => {
-            res.status(200).send(data)
+            if(data != null)res.status(200).send(data)
+            else next('Mentor not found')
         })
         .catch(err => {
             next(err)

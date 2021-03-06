@@ -14,9 +14,11 @@ app.use(express.urlencoded({extended: false}))
 
 const userRoutes = require('./routes/user.routes')
 const jobRoutes = require('./routes/job.routes')
+const mentorRoutes = require('./routes/mentor.routes')
 
 app.use('/user', userRoutes)
 app.use('/job', jobRoutes)
+app.use('/mentor', mentorRoutes)
 
 app.use('/', (req, res) => {
     res.send({message: 'It\'s running!'})

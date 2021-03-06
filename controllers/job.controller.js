@@ -3,6 +3,7 @@ const db = require('../models')
 const Job = db.jobs
 
 function createJob(req, res, next) {
+    console.log(req.body)
     Job.create(req.body) 
         .then(data => {
             data.createdById = req.user.id
@@ -10,14 +11,16 @@ function createJob(req, res, next) {
             res.status(200).send(data)
         })
         .catch(err => {
-            next(err)
+            if(err.message == 'Validation error') next('invalid request format')
+            else next(err)
         })
 }
 
 function showAllJob(req, res, next) {
     Job.findAll({})
         .then(data => {
-            res.status(200).send(data)
+            if(data.length != 0)res.status(200).send(data)
+            else res.send({message: 'no job data to show'})
         })
         .catch(err => {
             next(err)
@@ -41,7 +44,7 @@ function jobByCategory(req, res, next) {
 function jobBySalary(req, res, next) {
     Job.findAll({where: {
         fee: {
-            [Op.between] : [req.body.minFee, req.body.maxFee]
+            [Op.between] : [req.params.minFee, req.params.maxFee]
         }
     }})
         .then(data => {

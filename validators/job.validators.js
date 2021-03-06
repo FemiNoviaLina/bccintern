@@ -9,9 +9,11 @@ const jobSchema = Joi.object().keys({
     
     location: Joi.string(),
 
-    duration: Joi.number(),
+    duration: Joi.number()
+            .integer(),
     
     fee: Joi.number()
+        .integer()
         .min(0)
         .required(),
 
@@ -19,5 +21,5 @@ const jobSchema = Joi.object().keys({
 })
 
 module.exports = {
-    "createJob": jobSchema
+    "create": jobSchema
 }

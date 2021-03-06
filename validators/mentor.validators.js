@@ -13,10 +13,11 @@ const mentorSchema = Joi.object().keys({
     resume: Joi.string(),
 
     fee: Joi.number()
+        .integer()
         .min(0)
         .required()
 })
 
 module.exports = {
-    "addMentor": mentorSchema
+    "add": mentorSchema
 }

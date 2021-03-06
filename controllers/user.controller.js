@@ -14,7 +14,8 @@ function registerUser(req, res, next) {
             res.status(200).send({data, token})
         })
         .catch(err => {
-            next(err)
+            if(err.message == 'Validation error') next('email or username already used by another account / invalid input format')
+            else next(err)
         })
 }
 
@@ -34,7 +35,7 @@ function loginUser(req, res, next) {
                     const token = jwt.sign(payload, process.env.JWT_TOKEN)
                     res.status(200).send({data, token})
                 } else {
-                    next({statusCode: 400, message: 'Wrong password'})
+                    next('Wrong password')
                 }
             })
             .catch(err => {
@@ -48,10 +49,11 @@ function loginUser(req, res, next) {
 function showUserById(req, res, next) {
     User.findByPk(req.params.id)
         .then(data => {
-            res.status(200).send(data)
+            if(data != null) res.status(200).send(data)
+            else next('User not found')
         })
         .catch(err => {
-            next('User not found')
+            next(err)
         })
 }
 

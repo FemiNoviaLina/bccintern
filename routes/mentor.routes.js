@@ -3,11 +3,11 @@ const mentorController = require('../controllers/mentor.controller')
 const joiMiddleware = require('../middlewares/joiValidators')
 const jwtMiddleware = require('../middlewares/jwtAuth')
 
-router.post('/addMentor/', mentorController.inputMentor)
+router.post('/add', joiMiddleware, mentorController.inputMentor)
 
-router.get('/viewMentor/:id', jwtMiddleware, mentorController.viewMentor)
+router.get('/getById/:id', jwtMiddleware, mentorController.viewMentor)
 
-router.get('/showAll', mentorController.showAllMentor)
+router.get('/showAll', jwtMiddleware, mentorController.showAllMentor)
 
 router.delete('/clearMentorDb', mentorController.clearAllMentor)
 
