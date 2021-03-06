@@ -21,7 +21,7 @@ users.hasMany(jobs, {as: 'CreatedBy', foreignKey : 'createdById'})
 users.hasMany(jobs, {as: 'DoneBy', foreignKey : 'doneById'})
 jobs.belongsTo(users, {onDelete : 'cascade', onUpdate : 'cascade'})
 
-mentors.hasMany(users, {as: 'user', foreignKey: 'userId'})
+mentors.hasMany(users, {as: 'mentor', foreignKey: 'mentorId'})
 users.belongsTo(mentors, {onDelete: 'cascade', onUpdate: 'cascade'})
 
 module.exports =  {

@@ -9,6 +9,7 @@ function registerUser(req, res, next) {
             let payload = {
                 id: data.id,
                 username: data.username,
+                applyTo: data.applyTo
             }
             const token = jwt.sign(payload, process.env.JWT_TOKEN)
             res.status(200).send({data, token})
@@ -31,6 +32,7 @@ function loginUser(req, res, next) {
                     let payload = {
                         id: data.id,
                         username: data.username,
+                        applyTo: data.applyTo
                     }
                     const token = jwt.sign(payload, process.env.JWT_TOKEN)
                     res.status(200).send({data, token})

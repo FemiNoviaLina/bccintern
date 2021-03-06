@@ -5,9 +5,9 @@ const jwtMiddleware = require('../middlewares/jwtAuth')
 
 router.post('/add', joiMiddleware, mentorController.inputMentor)
 
-router.get('/getById/:id', jwtMiddleware, mentorController.viewMentor)
+router.get('/getById/:id', mentorController.viewMentor)
 
-router.get('/showAll', jwtMiddleware, mentorController.showAllMentor)
+router.get('/showAll', mentorController.showAllMentor)
 
 router.delete('/clearMentorDb', mentorController.clearAllMentor)
 

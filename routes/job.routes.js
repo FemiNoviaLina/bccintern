@@ -5,13 +5,15 @@ const jwtMiddleware = require('../middlewares/jwtAuth')
 
 router.post('/create',jwtMiddleware, joiMiddleware, jobController.createJob)
 
-router.get('/showAll', jwtMiddleware, jobController.showAllJob)
+router.get('/showAll', jobController.showAllJob)
 
-router.get('/searchByCategory/:category', jwtMiddleware, jobController.jobByCategory)
+router.get('/searchByCategory/:category', jobController.jobByCategory)
 
-router.get('/searchBySalary/:minFee/:maxFee', jwtMiddleware, jobController.jobBySalary)
+router.get('/searchBySalary/:minFee/:maxFee', jobController.jobBySalary)
 
-router.get('/take/:id', jwtMiddleware, jobController.getJob)
+router.get('/apply/:id', jwtMiddleware, jobController.applyJob)
+
+router.get('/setWorker/:jobId/:userId', jwtMiddleware, jobController.setWorker)
 
 router.delete('/clearJobDb', jobController.clearAllJobs)
 

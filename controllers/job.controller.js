@@ -1,9 +1,10 @@
 const { Op } = require("sequelize");
 const db = require('../models')
 const Job = db.jobs
+const User = db.users
 
 function createJob(req, res, next) {
-    console.log(req.body)
+    console.log(req.user.id)
     Job.create(req.body) 
         .then(data => {
             data.createdById = req.user.id
@@ -55,16 +56,34 @@ function jobBySalary(req, res, next) {
         })
 }
 
-function getJob(req, res, next) {
+function applyJob(req, res, next) {
     Job.findByPk(req.params.id) 
         .then(data => {
-            data.doneById = req.user.id
-            data.save({ fields: ['doneById']})
-            res.status(200).send(data)
+            User.findByPk(req.user.id)
+            .then(userData => {
+                console.log(data.id)
+                data.applier = data.applier + '-' + req.user.id
+                data.save({ fields: ['applier']})
+                userData.applyTo = req.user.applyTo + '-' + data.id
+                userData.save({ fields: ['applyTo']})
+                res.status(200).send(data)
+            })
         })
         .catch(err => {
             next(err)
         })    
+}
+
+function setWorker(req, res, next) {
+    Job.findByPk(req.params.jobId)
+        .then(data => {
+            data.doneById = req.params.userId
+            data.save({fields: ['doneById']})
+            res.status(200).send(data)
+        })
+        .catch(err => {
+            next(err)
+        })
 }
 
 function clearAllJobs(req, res, next) {
@@ -84,6 +103,7 @@ module.exports = {
     showAllJob,
     jobByCategory,
     jobBySalary,
-    getJob,
+    applyJob,
+    setWorker,
     clearAllJobs
 }

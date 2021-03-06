@@ -7,7 +7,7 @@ router.post('/register', joiMiddleware, userController.registerUser)
 
 router.post('/login', joiMiddleware, userController.loginUser)
 
-router.get('/getById/:id', jwtMiddleware, userController.showUserById)
+router.get('/getById/:id', userController.showUserById)
 
 router.delete('/clearUserDb', userController.clearAllUser)
 

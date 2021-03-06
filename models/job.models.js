@@ -25,6 +25,11 @@ module.exports = (sequelize, Sequelize) => {
 
         category: {
             type: Sequelize.STRING
+        },
+
+        applier: {
+            type: Sequelize.STRING,
+            defaultValue: '-'
         }
     })
 
