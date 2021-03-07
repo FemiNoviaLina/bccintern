@@ -33,5 +33,12 @@ module.exports = (sequelize, Sequelize) => {
         }
     })
 
+    job.prototype.toJSON = function () {
+        var values = Object.assign({}, this.get())
+
+        delete values.userId
+        return values
+    }
+
     return job
 }

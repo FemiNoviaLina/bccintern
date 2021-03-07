@@ -5,14 +5,20 @@ const jwt = require('jsonwebtoken')
 
 function registerUser(req, res, next) {
     User.create(req.body)
-        .then(data => {
+        .then(userData => {
             let payload = {
-                id: data.id,
-                username: data.username,
-                applyTo: data.applyTo
+                id: userData.id,
+                username: userData.username
             }
             const token = jwt.sign(payload, process.env.JWT_TOKEN)
-            res.status(200).send({data, token})
+            res.status(200).send({
+                message: 'Register success',
+                status: true,
+                data: {
+                    userData, 
+                    token
+                }
+            })
         })
         .catch(err => {
             if(err.message == 'Validation error') next('email or username already used by another account / invalid input format')
@@ -27,15 +33,21 @@ function loginUser(req, res, next) {
                 username: req.body.username, 
             }
         })
-            .then(data => {
-                if(bcrypt.compareSync(req.body.password, data.password)) {
+            .then(userData => {
+                if(bcrypt.compareSync(req.body.password, userData.password)) {
                     let payload = {
-                        id: data.id,
-                        username: data.username,
-                        applyTo: data.applyTo
+                        id: userData.id,
+                        username: userData.username,
                     }
                     const token = jwt.sign(payload, process.env.JWT_TOKEN)
-                    res.status(200).send({data, token})
+                    res.status(200).send({
+                        message: 'Login success',
+                        status: true,
+                        data: {
+                            userData,
+                            token
+                        }
+                    })
                 } else {
                     next('Wrong password')
                 }
@@ -50,8 +62,14 @@ function loginUser(req, res, next) {
 
 function showUserById(req, res, next) {
     User.findByPk(req.params.id)
-        .then(data => {
-            if(data != null) res.status(200).send(data)
+        .then(userData => {
+            if(data != null) res.status(200).send({
+                message: `Showing user with id: ${req.params.id}`,
+                status: true,
+                data: {
+                    userData
+                }
+            })
             else next('User not found')
         })
         .catch(err => {
@@ -63,7 +81,9 @@ function clearAllUser(req, res, next) {
     User.destroy({where:{}})
         .then(resolved => {
             res.status(200).send({
-                message: `cleared successfully`
+                message: `${resolved} row cleared successfully`,
+                status: true,
+                data: {}
             })
         })
         .catch(reject => {
