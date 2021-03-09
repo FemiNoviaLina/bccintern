@@ -1,7 +1,8 @@
 const { Op } = require("sequelize");
-const db = require('../models')
+const db = require('../models');
 const Job = db.jobs
 const User = db.users
+const user_job = db.user_job
 
 function createJob(req, res, next) {
     console.log(req.user.id)
@@ -72,39 +73,39 @@ function jobBySalary(req, res, next) {
 }
 
 function applyJob(req, res, next) {
-    Job.findByPk(req.params.id) 
-        .then(jobData => {
-            User.findByPk(req.user.id)
-            .then(userData => {
-                console.log(jobData.id)
-                jobData.applier = jobData.applier + '-' + req.user.id
-                jobData.save({ fields: ['applier']})
-                userData.applyTo = req.user.applyTo + '-' + data.id
-                userData.save({ fields: ['applyTo']})
-                res.status(200).send({
-                    message: `User with id ${userData.id} success applying to job with id ${jobData.id}`,
-                    status: true,
-                    data: {
-                        userData,
-                        jobData
-                    }
+    user_job.create({
+        userId: req.user.id,
+        jobId: req.params.id
+    })
+        .then(data => {
+            User.findByPk(data.userId)
+                .then(userData => {
+                    Job.findByPk(data.jobId)
+                        .then(jobData => {
+                            res.status(200).send({
+                                message: `User with id ${userData.id} success apply to job with id ${jobData.id}`,
+                                status: true,
+                                data: {
+                                    userData,
+                                    jobData
+                                }
+                            })
+                    })
                 })
-            })
         })
         .catch(err => {
-            next(err)
-        })    
+            next('User already apply for this job')
+        })
 }
 
 function allJobByUser(req, res, next) {
     Job.findAll({where: {createdById: req.params.userId}})
         .then(data => {
-            if(data != null) res.status(200).send({
-                message: `Showing ${data.length} data created by user with id ${req.params.userId}`,
+            res.send({
+                message: `Showing all job created by user with id ${req.params.userId}`,
                 status: true,
                 data: data
             })
-            else res.send({message: 'No job created by this user'})
         })
         .catch(err => {
             next(err)
@@ -112,15 +113,21 @@ function allJobByUser(req, res, next) {
 }
 
 function viewApplier(req, res, next) {
-    Job.findByPk(req.params.id)
+    let applier = []
+    user_job.findAll({where: {jobId: req.params.id}})
         .then(data => {
-            let applier = data.applier.split('-')
-            applier.splice(0, 2)
-            res.status(200).send({
-                message: `Showing ${applier.length} applier for job with id ${req.params.id}`,
-                status: true,
-                data: applier
+            data.forEach(element => {
+                applier.push(element.userId)
+                console.log(element.userId)
             })
+            User.findAll({where: {id: {[Op.or]: applier}}})
+                .then(allData => {
+                    res.send({
+                        message: `Showing all applier for job with id ${req.params.id}`,
+                        status: 'success',
+                        data: allData
+                    })
+                })
         })
         .catch(err => {
             next(err)

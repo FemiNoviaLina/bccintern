@@ -63,7 +63,7 @@ function loginUser(req, res, next) {
 function showUserById(req, res, next) {
     User.findByPk(req.params.id)
         .then(userData => {
-            if(data != null) res.status(200).send({
+            if(userData != null) res.status(200).send({
                 message: `Showing user with id: ${req.params.id}`,
                 status: true,
                 data: {

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const userJob = sequelize.define('userJob', {
+    const user_job = sequelize.define('user_job', {
         userId: {
             type: Sequelize.INTEGER,
             allowNull: false
@@ -11,5 +11,5 @@ module.exports = (sequelize, Sequelize) => {
         }
     })
 
-    return userJob
+    return user_job
 }
