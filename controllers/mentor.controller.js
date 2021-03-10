@@ -1,12 +1,13 @@
 const db = require('../models')
 const Mentor = db.mentors
+const User = db.users
 
 function inputMentor(req, res, next) {
     Mentor.create(req.body) 
         .then(data => {
             res.status(200).send({
                 message: 'Mentor successfully added',
-                status: true,
+                status: 'success',
                 data: data
             })
         })
@@ -20,7 +21,7 @@ function viewMentor(req, res, next) {
         .then(data => {
             if(data != null)res.status(200).send({
                 message: `Showing mentor data with id ${req.params.id}`,
-                status: true,
+                status: 'success',
                 data: data
             })
             else next('Mentor not found')
@@ -35,7 +36,7 @@ function showAllMentor(req, res, next) {
         .then(data => {
             res.status(200).send({
                 message: `Showing ${data.length} mentor data`,
-                status: true,
+                status: 'success',
                 data: data
             })
         })
@@ -44,12 +45,31 @@ function showAllMentor(req, res, next) {
         })
 }
 
+function takeMentor(req, res, next) {
+    User.findByPk(req.user.id)
+        .then(userData => {
+            userData.mentorId = req.params.id
+            userData.save({fields: ['mentorId']})
+            Mentor.findByPk(req.params.id)
+                .then(mentorData => {
+                    res.send({
+                        message: `User with id ${req.user.id} take mentor with id ${req.params.id} as mentor`,
+                        status: 'success',
+                        data: {
+                            mentorData,
+                            userData
+                        }
+                    })
+                })
+        })
+}
+
 function clearAllMentor(req, res, next) {
     Mentor.destroy({truncate: true})
         .then(resolved => {
             res.status(200).send({
                 message: `${resolved} row cleared successfully`,
-                status: true,
+                status: 'success',
                 data: {}
             })
         })

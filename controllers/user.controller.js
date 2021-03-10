@@ -13,7 +13,7 @@ function registerUser(req, res, next) {
             const token = jwt.sign(payload, process.env.JWT_TOKEN)
             res.status(200).send({
                 message: 'Register success',
-                status: true,
+                status: 'success',
                 data: {
                     userData, 
                     token
@@ -42,7 +42,7 @@ function loginUser(req, res, next) {
                     const token = jwt.sign(payload, process.env.JWT_TOKEN)
                     res.status(200).send({
                         message: 'Login success',
-                        status: true,
+                        status: 'success',
                         data: {
                             userData,
                             token
@@ -65,7 +65,7 @@ function showUserById(req, res, next) {
         .then(userData => {
             if(userData != null) res.status(200).send({
                 message: `Showing user with id: ${req.params.id}`,
-                status: true,
+                status: 'success',
                 data: {
                     userData
                 }
@@ -82,7 +82,7 @@ function clearAllUser(req, res, next) {
         .then(resolved => {
             res.status(200).send({
                 message: `${resolved} row cleared successfully`,
-                status: true,
+                status: 'success',
                 data: {}
             })
         })

@@ -12,7 +12,7 @@ function createJob(req, res, next) {
             data.save({ fields: ['createdById']})
             res.status(200).send({
                 message: 'Job created successfully',
-                status: true,
+                status: 'success',
                 data: data
             })
         })
@@ -27,7 +27,7 @@ function showAllJob(req, res, next) {
         .then(data => {
             res.status(200).send({
                 message: `Showing ${data.length} job(s)`,
-                status: true,
+                status: 'success',
                 data: data
             })
         .catch(err => {
@@ -45,7 +45,7 @@ function jobByCategory(req, res, next) {
         .then(data => {
             res.status(200).send({
                 message: `Showing ${data.length} job(s) match ${req.params.category} category`,
-                status: true,
+                status: 'success',
                 data: data
             })
         })
@@ -63,7 +63,7 @@ function jobBySalary(req, res, next) {
         .then(data => {
             res.status(200).send({
                 message: `Showing ${data.length} job(s) in range ${req.params.minFee} - ${req.params.maxFee}`,
-                status: true,
+                status: 'success',
                 data: data
             })
         })
@@ -84,7 +84,7 @@ function applyJob(req, res, next) {
                         .then(jobData => {
                             res.status(200).send({
                                 message: `User with id ${userData.id} success apply to job with id ${jobData.id}`,
-                                status: true,
+                                status: 'success',
                                 data: {
                                     userData,
                                     jobData
@@ -103,7 +103,7 @@ function allJobByUser(req, res, next) {
         .then(data => {
             res.send({
                 message: `Showing all job created by user with id ${req.params.userId}`,
-                status: true,
+                status: 'success',
                 data: data
             })
         })
@@ -141,7 +141,7 @@ function setWorker(req, res, next) {
             jobData.save({fields: ['doneById']})
             res.status(200).send({
                 message: `Success setting user with id ${req.params.userId} as worker for job with id ${req.params.jobId}`,
-                status: true,
+                status: 'success',
                 data: {
                     jobData
                 }
@@ -157,7 +157,7 @@ function clearAllJobs(req, res, next) {
         .then(resolved => {
             res.status(200).send({
                 message: `${resolved} row cleared successfully`,
-                status: true,
+                status: 'success',
                 data: {}
             })
         })
