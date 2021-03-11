@@ -39,11 +39,7 @@ function showAllJob(req, res, next) {
 function searchJob(req, res, next) {
     Job.findAll({where: {
         jobTitle: {
-            [Op.or]: [
-                {[Op.startsWith]: req.params.key},
-                {[Op.endsWith]: req.params.key},
-                {[Op.substring]: req.params.key}
-            ]
+            [Op.substring]: req.params.key
         }
     }})    
         .then(data => {
@@ -111,10 +107,9 @@ function jobBySalary(req, res, next) {
 }
 
 function allFilter(req, res, next) {
-    if(req.body.category != undefined && req.body.location != undefined) {
+    if(req.body.minFee != '' && req.body.maxFee != '' && req.body.location != '') {
         Job.findAll({where: {
             [Op.and]: [
-                {category: req.body.category},
                 {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
                 {location: req.body.location}
             ]
@@ -129,7 +124,7 @@ function allFilter(req, res, next) {
             .catch(err => {
                 next(err)
             })
-    } else if(req.body.category == undefined && req.body.location == undefined) {
+    } else if(req.body.location == '') {
         Job.findAll({where: {
                 fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}
         }})
@@ -143,29 +138,9 @@ function allFilter(req, res, next) {
             .catch(err => {
                 next(err)
             })
-    } else if(req.body.category == undefined) {
+    } else if(req.body.minFee != '' && req.body.maxFee != '') {
         Job.findAll({where: {
-            [Op.and]: [
-                {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
-                {location: req.body.location}
-            ]
-        }})
-            .then(data => {
-                res.status(200).send({
-                    message: `Showing ${data.length} job match all filter`,
-                    status: 'success',
-                    data: data
-                })
-            })
-            .catch(err => {
-                next(err)
-            })
-    } else if(req.body.location == undefined) {
-        Job.findAll({where: {
-            [Op.and]: [
-                {category: req.body.category},
-                {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
-            ]
+                location: req.body.location
         }})
             .then(data => {
                 res.status(200).send({
@@ -181,29 +156,36 @@ function allFilter(req, res, next) {
 }
 
 function applyJob(req, res, next) {
-    user_job.create({
-        userId: req.user.id,
-        jobId: req.params.id
-    })
-        .then(data => {
-            User.findByPk(data.userId)
-                .then(userData => {
-                    Job.findByPk(data.jobId)
-                        .then(jobData => {
-                            res.status(200).send({
-                                message: `User with id ${userData.id} success apply to job with id ${jobData.id}`,
-                                status: 'success',
-                                data: {
-                                    userData,
-                                    jobData
-                                }
+    Job.findByPk(req.params.id)
+        .then(jobData => {
+            if(jobData && jobData.createdById != req.user.id) {
+                user_job.create({
+                    userId: req.user.id,
+                    jobId: req.params.id
+                })
+                    .then(data => {
+                        Promise.all([User.findByPk(data.userId), Job.findByPk(data.jobId)])
+                            .then(userJob => {
+                                [user, job] = userJob
+                                res.status(200).send({
+                                    message: `User with id ${user.id} success apply to job with id ${job.id}`,
+                                    status: 'success',
+                                    data: {
+                                        user,
+                                        job
+                                    }
+                                })
                             })
                     })
-                })
-        })
-        .catch(err => {
-            if(err.message == 'Validation error') next('User already apply to this job')
-            else next(err)
+                    .catch(err => {
+                        if(err.message == 'Validation error') next('User already apply to this job')
+                        else next(err)
+                    })
+            } else if(!jobData){
+                next('Job doesn\'t exist')
+            } else {
+                next('cannot apply to self-created jobs')
+            }
         })
 }
 
@@ -246,7 +228,7 @@ function viewApplier(req, res, next) {
 function setWorker(req, res, next) {
     Job.findByPk(req.params.jobId)
         .then(jobData => {
-            if(req.user.id == jobData.createdById) {
+            if(jobData.createdById == req.user.id && jobData.createdById != req.params.userId) {
                 if(jobData.doneById == null) {
                     jobData.doneById = req.params.userId
                     jobData.save({fields: ['doneById']})
@@ -260,8 +242,10 @@ function setWorker(req, res, next) {
                 } else {
                     next('You already set someone to do this job')
                 }
-            } else {
+            } else if(jobData.createdById != req.user.id) {
                 next('You are not allowed to set someone to do this job')
+            } else if(jobData.createdById == req.params.userId){
+                next('You cannot set yourself to do this job')
             }
         })
         .catch(err => {
