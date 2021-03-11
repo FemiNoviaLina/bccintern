@@ -5,7 +5,7 @@ const db = require('./models')
 const errorHandler = require('./utils/errorHandler')
 const cors = require('cors')
 
-db.sequelize.sync({ })
+db.sequelize.sync({ force: true })
 
 app.use(cors())
 

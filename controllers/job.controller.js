@@ -1,6 +1,5 @@
 const { Op } = require("sequelize");
 const db = require('../models');
-const { job } = require("../validators");
 const Job = db.jobs
 const User = db.users
 const user_job = db.user_job

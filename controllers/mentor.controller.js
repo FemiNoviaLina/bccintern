@@ -45,6 +45,23 @@ function showAllMentor(req, res, next) {
         })
 }
 
+function mentorBySkill(req, res, next) {
+    Mentor.findAll({where: {
+        skill: req.params.skill
+        }
+    })
+        .then(data => {
+            res.status(200).send({
+                message: `Showing ${data.length} mentor(s) match ${req.params.category} skill`,
+                status: 'success',
+                data: data
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 function pickMentor(req, res, next) {
     User.findByPk(req.user.id)
         .then(userData => {
@@ -85,6 +102,7 @@ module.exports = {
     inputMentor,
     viewMentor,
     showAllMentor,
+    mentorBySkill,
     pickMentor,
     clearAllMentor
 }

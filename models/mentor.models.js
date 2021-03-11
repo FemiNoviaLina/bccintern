@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
 
-        Resume: {
+        resume: {
             type: Sequelize.STRING,
         },
 
