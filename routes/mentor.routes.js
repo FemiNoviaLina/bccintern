@@ -11,4 +11,6 @@ router.get('/showAll', mentorController.showAllMentor)
 
 router.delete('/clearMentorDb', mentorController.clearAllMentor)
 
+router.put('/pickMentor/', mentorController.pickMentor)
+
 module.exports = router

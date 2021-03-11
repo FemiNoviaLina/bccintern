@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const db = require('../models');
+const { job } = require("../validators");
 const Job = db.jobs
 const User = db.users
 const user_job = db.user_job
@@ -30,21 +31,59 @@ function showAllJob(req, res, next) {
                 status: 'success',
                 data: data
             })
-        .catch(err => {
-            next(err)
-        })
+    })
+    .catch(err => {
+        next(err)
     })
 }
 
+function searchJob(req, res, next) {
+    Job.findAll({where: {
+        jobTitle: {
+            [Op.or]: [
+                {[Op.startsWith]: req.params.key},
+                {[Op.endsWith]: req.params.key},
+                {[Op.substring]: req.params.key}
+            ]
+        }
+    }})    
+        .then(data => {
+            res.status(200).send({
+                message: `Showing ${data.length} job(s) match ${req.params.key}`,
+                status: 'success',
+                data: data
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 function jobByCategory(req, res, next) {
-    Job.findAll({where: 
-        {
+    Job.findAll({where: {
         category: req.params.category
         }
     })
         .then(data => {
             res.status(200).send({
                 message: `Showing ${data.length} job(s) match ${req.params.category} category`,
+                status: 'success',
+                data: data
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
+function jobByLocation(req, res, next) {
+    Job.findAll({where: {
+        location: req.params.location
+        }
+    })
+        .then(data => {
+            res.status(200).send({
+                message: `Showing ${data.length} job(s) at ${req.params.category}`,
                 status: 'success',
                 data: data
             })
@@ -72,6 +111,76 @@ function jobBySalary(req, res, next) {
         })
 }
 
+function allFilter(req, res, next) {
+    if(req.body.category != undefined && req.body.location != undefined) {
+        Job.findAll({where: {
+            [Op.and]: [
+                {category: req.body.category},
+                {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
+                {location: req.body.location}
+            ]
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else if(req.body.category == undefined && req.body.location == undefined) {
+        Job.findAll({where: {
+                fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else if(req.body.category == undefined) {
+        Job.findAll({where: {
+            [Op.and]: [
+                {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
+                {location: req.body.location}
+            ]
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else if(req.body.location == undefined) {
+        Job.findAll({where: {
+            [Op.and]: [
+                {category: req.body.category},
+                {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
+            ]
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    }
+}
+
 function applyJob(req, res, next) {
     user_job.create({
         userId: req.user.id,
@@ -94,7 +203,8 @@ function applyJob(req, res, next) {
                 })
         })
         .catch(err => {
-            next('User already apply for this job')
+            if(err.message == 'Validation error') next('User already apply to this job')
+            else next(err)
         })
 }
 
@@ -137,14 +247,36 @@ function viewApplier(req, res, next) {
 function setWorker(req, res, next) {
     Job.findByPk(req.params.jobId)
         .then(jobData => {
-            jobData.doneById = req.params.userId
-            jobData.save({fields: ['doneById']})
-            res.status(200).send({
-                message: `Success setting user with id ${req.params.userId} as worker for job with id ${req.params.jobId}`,
-                status: 'success',
-                data: {
-                    jobData
+            if(req.user.id == jobData.createdById) {
+                if(jobData.doneById == null) {
+                    jobData.doneById = req.params.userId
+                    jobData.save({fields: ['doneById']})
+                    res.status(200).send({
+                        message: `Success setting user with id ${req.params.userId} as worker for job with id ${req.params.jobId}`,
+                        status: 'success',
+                        data: {
+                            jobData
+                        }
+                    })
+                } else {
+                    next('You already set someone to do this job')
                 }
+            } else {
+                next('You are not allowed to set someone to do this job')
+            }
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
+function jobDoneByUser(req, res, next) {
+    Job.findAll({where: {doneById: req.params.id}})
+        .then(data => {
+            res.status(200).send({
+                message: `Showing ${data.length} job(s) done by user with Id ${req.params.id}`,
+                status: 'success',
+                data: data
             })
         })
         .catch(err => {
@@ -169,11 +301,15 @@ function clearAllJobs(req, res, next) {
 module.exports = {
     createJob,
     showAllJob,
+    searchJob,
     jobByCategory,
     jobBySalary,
+    jobByLocation,
+    allFilter,
     applyJob,
     allJobByUser,
     viewApplier,
     setWorker,
+    jobDoneByUser,
     clearAllJobs
 }

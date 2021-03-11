@@ -45,7 +45,7 @@ function showAllMentor(req, res, next) {
         })
 }
 
-function takeMentor(req, res, next) {
+function pickMentor(req, res, next) {
     User.findByPk(req.user.id)
         .then(userData => {
             userData.mentorId = req.params.id
@@ -61,6 +61,9 @@ function takeMentor(req, res, next) {
                         }
                     })
                 })
+        })
+        .catch(err => {
+            next(err)
         })
 }
 
@@ -82,5 +85,6 @@ module.exports = {
     inputMentor,
     viewMentor,
     showAllMentor,
+    pickMentor,
     clearAllMentor
 }
