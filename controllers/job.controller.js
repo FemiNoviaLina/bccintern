@@ -322,6 +322,26 @@ function clearAllJobs(req, res, next) {
         })
 }
 
+function updateJob(req, res, next) {
+    Promise.all([Job.update(req.body, {where: {id: req.params.id}}), Job.findByPk(req.params.id)])
+        .then(data => {
+            [rowAffected, jobData] = data
+            if(req.file) {
+                let name = req.file.path.split("/")
+                jobData.picture = name[name.length - 1]
+            }
+            jobData.save({ fields: ['picture']})
+            res.status(200).send({
+                message: `Job data with id ${req.params.id} succesfully updated`,
+                status: 'success',
+                data: jobData
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 module.exports = {
     createJob,
     showAllJob,
@@ -335,5 +355,6 @@ module.exports = {
     viewApplier,
     setWorker,
     jobDoneByUser,
+    updateJob,
     clearAllJobs
 }

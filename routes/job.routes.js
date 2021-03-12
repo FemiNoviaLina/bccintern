@@ -30,6 +30,8 @@ router.get('/history/:id', jobController.jobDoneByUser)
 
 router.delete('/clearJobDb', jobController.clearAllJobs)
 
+router.put('/updateJob/:id', multerMiddleware, jobController.updateJob)
+
 router.use('/', (req, res) => {
     res.send({message: 'at job'})
 })
