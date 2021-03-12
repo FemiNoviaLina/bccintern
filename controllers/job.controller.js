@@ -194,6 +194,46 @@ function allFilter(req, res, next) {
             .catch(err => {
                 next(err)
             })
+    } else if(req.body.minFee != '' && req.body.maxFee != '' && req.body.location == '' && req.body.key == '') {
+        Job.findAll({where: {
+            fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else if(req.body.minFee == '' && req.body.maxFee == '' && req.body.location != '' && req.body.key == '') {
+        Job.findAll({where: {
+            location: req.body.location
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else {
+        Job.findAll({})
+        .then(data => {
+            res.status(200).send({
+                message: `Showing ${data.length} job(s)`,
+                status: 'success',
+                data: data
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
     }
 }
 

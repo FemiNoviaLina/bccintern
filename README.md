@@ -14,3 +14,6 @@ Make sure to to install the rest of the required dependencies using :
 ```sh
      npm install
 ```
+
+Documentation :
+https://app.swaggerhub.com/apis-docs/team439/your-api/1.0.0#/
