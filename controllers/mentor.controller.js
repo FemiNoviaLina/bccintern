@@ -87,13 +87,17 @@ function pickMentor(req, res, next) {
 function addPhoto(req, res, next) {
     Mentor.findByPk(req.params.id)
         .then(data => {
-            data.picture = req.file.path
-            data.save({fields: ['picture']})
-            res.send({
-                message: 'Photo uploaded successfully',
-                status: 'success',
-                data: data
-            })
+            if(data != null) {
+                data.picture = req.file.path
+                data.save({fields: ['picture']})
+                res.send({
+                    message: 'Photo uploaded successfully',
+                    status: 'success',
+                    data: data
+                })
+            } else {
+                next('Mentor not found')
+            }  
         })
         .catch(err => {
             next(err)
