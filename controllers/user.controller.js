@@ -84,7 +84,7 @@ function addPhoto(req, res, next) {
         .then(data => {
             if(data != null) {
                 let name = req.file.path.split("/")
-                data.picture = 'bcc-filkom-ub-elb-392908734.ap-southeast-1.elb.amazonaws.com:8082/' + name[name.length - 1]
+                data.picture = 'http://bcc-filkom-ub-elb-392908734.ap-southeast-1.elb.amazonaws.com:8082/' + name[name.length - 1]
                 data.save({fields: ['picture']})
                 res.send({
                     message: 'Photo uploaded successfully',
