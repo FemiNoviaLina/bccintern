@@ -8,7 +8,7 @@ function createJob(req, res, next) {
     Job.create(req.body) 
         .then(data => {
             data.createdById = req.user.id
-            if(req.file.path) {
+            if(req.file) {
                 data.picture = req.file.path
             }
             data.save({ fields: ['createdById', 'picture']})
