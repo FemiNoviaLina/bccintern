@@ -78,7 +78,7 @@ function jobByLocation(req, res, next) {
     })
         .then(data => {
             res.status(200).send({
-                message: `Showing ${data.length} job(s) at ${req.params.category}`,
+                message: `Showing ${data.length} job(s) at ${req.params.location}`,
                 status: 'success',
                 data: data
             })
@@ -124,7 +124,7 @@ function allFilter(req, res, next) {
             .catch(err => {
                 next(err)
             })
-    } else if(req.body.location == '') {
+    } else if(req.body.location == '' && req.body.minFee != '' && req.body.maxFee != '') {
         Job.findAll({where: {
                 fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}
         }})
@@ -138,7 +138,7 @@ function allFilter(req, res, next) {
             .catch(err => {
                 next(err)
             })
-    } else if(req.body.minFee != '' && req.body.maxFee != '') {
+    } else if(req.body.minFee == '' && req.body.maxFee == '' && req.body.location != '') {
         Job.findAll({where: {
                 location: req.body.location
         }})
@@ -182,9 +182,9 @@ function applyJob(req, res, next) {
                         else next(err)
                     })
             } else if(!jobData){
-                next('Job doesn\'t exist')
+                next('Job not found')
             } else {
-                next('cannot apply to self-created jobs')
+                next({statusCode: 403, message: 'cannot apply to self-created jobs'})
             }
         })
 }
@@ -193,7 +193,7 @@ function allJobByUser(req, res, next) {
     Job.findAll({where: {createdById: req.params.userId}})
         .then(data => {
             res.send({
-                message: `Showing all job created by user with id ${req.params.userId}`,
+                message: `Showing ${data.length} job(s) created by user with id ${req.params.userId}`,
                 status: 'success',
                 data: data
             })
@@ -243,7 +243,7 @@ function setWorker(req, res, next) {
                     next('You already set someone to do this job')
                 }
             } else if(jobData.createdById != req.user.id) {
-                next('You are not allowed to set someone to do this job')
+                next({statusCode: 403, message: 'You are not allowed to set someone to do this job'})
             } else if(jobData.createdById == req.params.userId){
                 next('You cannot set yourself to do this job')
             }

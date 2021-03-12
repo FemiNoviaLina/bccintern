@@ -2,8 +2,6 @@ const router = require('express').Router()
 const jobController = require('../controllers/job.controller')
 const joiMiddleware = require('../middlewares/joiValidators')
 const jwtMiddleware = require('../middlewares/jwtAuth')
-const { job } = require('../validators')
-const { route } = require('./user.routes')
 
 router.post('/create',jwtMiddleware, joiMiddleware, jobController.createJob)
 

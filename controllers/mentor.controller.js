@@ -35,7 +35,7 @@ function showAllMentor(req, res, next) {
     Mentor.findAll()
         .then(data => {
             res.status(200).send({
-                message: `Showing ${data.length} mentor data`,
+                message: `Showing ${data.length} mentor(s)`,
                 status: 'success',
                 data: data
             })

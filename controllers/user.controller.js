@@ -21,7 +21,7 @@ function registerUser(req, res, next) {
             })
         })
         .catch(err => {
-            if(err.message == 'Validation error') next('email or username already used by another account / invalid input format')
+            if(err.message == 'Validation error') next('email or username already used by another account')
             else next(err)
         })
 }

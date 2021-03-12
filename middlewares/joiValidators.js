@@ -25,18 +25,18 @@ function joiValidator(req, res, next) {
 
             if(error){
                 const JoiError = {
-                    success : false,
-                    error : {
+                    message : {
                         details : _.map(error.details,({message , type})=>({
                             message,
                             type
                         }))
-                    }
+                    },
+                    status: 'unsuccess'
                 }
 
                 const customError = {
-                    success : false,
-                    error : "invalid request data. Pls review your request"
+                    message : 'invalid request data. Pls review your request',
+                    error : 'unsuccess'
                 }
 
                 return res.status(422).json(useJoiError ? JoiError : customError)
