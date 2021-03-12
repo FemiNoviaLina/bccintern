@@ -9,7 +9,8 @@ function createJob(req, res, next) {
         .then(data => {
             data.createdById = req.user.id
             if(req.file) {
-                data.picture = req.file.path
+                let name = req.file.path.split("/")
+                data.picture = name[name.length - 1]
             }
             data.save({ fields: ['createdById', 'picture']})
             res.status(200).send({
