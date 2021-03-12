@@ -1,5 +1,4 @@
-function errorHandler(err, req, res, next) {
-    console.log(err)  
+function errorHandler(err, req, res, next) { 
 
     switch(true) {
         case typeof err === 'string' :

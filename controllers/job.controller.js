@@ -250,7 +250,6 @@ function viewApplier(req, res, next) {
         .then(data => {
             data.forEach(element => {
                 applier.push(element.userId)
-                console.log(element.userId)
             })
             User.findAll({where: {id: {[Op.or]: applier}}})
                 .then(allData => {

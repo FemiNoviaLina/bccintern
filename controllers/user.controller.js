@@ -83,7 +83,8 @@ function addPhoto(req, res, next) {
     User.findByPk(req.params.id)
         .then(data => {
             if(data != null) {
-                data.picture = req.file.path
+                let name = req.file.path.split("/")
+                data.picture = name[name.length - 1]
                 data.save({fields: ['picture']})
                 res.send({
                     message: 'Photo uploaded successfully',
@@ -93,7 +94,6 @@ function addPhoto(req, res, next) {
             } else {
                 next('User not found')
             }
-
         })
         .catch(err => {
             next(err)
