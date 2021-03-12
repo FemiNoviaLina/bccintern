@@ -109,7 +109,59 @@ function jobBySalary(req, res, next) {
 }
 
 function allFilter(req, res, next) {
-    if(req.body.minFee != '' && req.body.maxFee != '' && req.body.location != '') {
+    if(req.body.minFee != '' && req.body.maxFee != '' && req.body.location != '' && req.body.key != '') {
+        Job.findAll({where: {
+            [Op.and]: [
+                {jobTitle: {[Op.substring]: req.body.key}},
+                {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
+                {location: req.body.location}
+            ]
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else if(req.body.key != '' && req.body.location == '' && req.body.minFee != '' && req.body.maxFee != '') {
+        Job.findAll({where: {
+            [Op.and]: [
+                {jobTitle: {[Op.substring]: req.body.key}},
+                {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}}
+            ]
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else if(req.body.minFee == '' && req.body.maxFee == '' && req.body.location != '' && req.body.key != '') {
+        Job.findAll({where: {
+            [Op.and]: [
+                {jobTitle: {[Op.substring]: req.body.key}},
+                {location: req.body.location}
+            ]
+        }})
+            .then(data => {
+                res.status(200).send({
+                    message: `Showing ${data.length} job match all filter`,
+                    status: 'success',
+                    data: data
+                })
+            })
+            .catch(err => {
+                next(err)
+            })
+    } else if(req.body.minFee != '' && req.body.maxFee != '' && req.body.location != '' && req.body.key == '') {
         Job.findAll({where: {
             [Op.and]: [
                 {fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}},
@@ -126,23 +178,9 @@ function allFilter(req, res, next) {
             .catch(err => {
                 next(err)
             })
-    } else if(req.body.location == '' && req.body.minFee != '' && req.body.maxFee != '') {
+    } else if(req.body.minFee == '' && req.body.maxFee == '' && req.body.location == '' && req.body.key != '') {
         Job.findAll({where: {
-                fee: {[Op.between] : [req.body.minFee, req.body.maxFee]}
-        }})
-            .then(data => {
-                res.status(200).send({
-                    message: `Showing ${data.length} job match all filter`,
-                    status: 'success',
-                    data: data
-                })
-            })
-            .catch(err => {
-                next(err)
-            })
-    } else if(req.body.minFee == '' && req.body.maxFee == '' && req.body.location != '') {
-        Job.findAll({where: {
-                location: req.body.location
+            jobTitle: {[Op.substring]: req.body.key}
         }})
             .then(data => {
                 res.status(200).send({
