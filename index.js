@@ -6,7 +6,7 @@ const errorHandler = require('./utils/errorHandler')
 const cors = require('cors')
 const path = require('path')
 
-db.sequelize.sync({ force: true })
+db.sequelize.sync({})
 
 app.use(cors())
 
