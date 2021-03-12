@@ -10,7 +10,7 @@ function createJob(req, res, next) {
             data.createdById = req.user.id
             if(req.file) {
                 let name = req.file.path.split("/")
-                data.picture = 'http://bcc-filkom-ub-elb-392908734.ap-southeast-1.elb.amazonaws.com:8082' + name[name.length - 1]
+                data.picture = name[name.length - 1]
             }
             data.save({ fields: ['createdById']})
             data.save({ fields: ['picture']})
