@@ -84,6 +84,22 @@ function pickMentor(req, res, next) {
         })
 }
 
+function addPhoto(req, res, next) {
+    Mentor.findByPk(req.params.id)
+        .then(data => {
+            data.picture = req.file.path
+            data.save({fields: ['picture']})
+            res.send({
+                message: 'Photo uploaded successfully',
+                status: 'success',
+                data: data
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 function clearAllMentor(req, res, next) {
     Mentor.destroy({truncate: true})
         .then(resolved => {
@@ -104,5 +120,6 @@ module.exports = {
     showAllMentor,
     mentorBySkill,
     pickMentor,
+    addPhoto,
     clearAllMentor
 }

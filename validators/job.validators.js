@@ -6,17 +6,20 @@ const jobSchema = Joi.object().keys({
     
     jobDesc: Joi.string()
             .required(),
+
+    requirement: Joi.string(),
     
     location: Joi.string(),
 
-    duration: Joi.number()
-            .integer(),
+    duration: Joi.string(),
     
     fee: Joi.number()
         .integer()
         .min(0)
         .required(),
 
+    contactPerson: Joi.string(),
+    
     category: Joi.string()
 })
 

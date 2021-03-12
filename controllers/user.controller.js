@@ -2,6 +2,8 @@ const db = require('../models')
 const User = db.users
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const multer = require('multer')
+
 
 function registerUser(req, res, next) {
     User.create(req.body)
@@ -77,6 +79,22 @@ function showUserById(req, res, next) {
         })
 }
 
+function addPhoto(req, res, next) {
+    User.findByPk(req.params.id)
+        .then(data => {
+            data.picture = req.file.path
+            data.save({fields: ['picture']})
+            res.send({
+                message: 'Photo uploaded successfully',
+                status: 'success',
+                data: data
+            })
+        })
+        .catch(err => {
+            next(err)
+        })
+}
+
 function clearAllUser(req, res, next) {
     User.destroy({where:{}})
         .then(resolved => {
@@ -95,5 +113,6 @@ module.exports = {
     registerUser,
     loginUser,
     showUserById,
+    addPhoto,
     clearAllUser
 }

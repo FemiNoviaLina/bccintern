@@ -10,12 +10,16 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
 
+        requirement: {
+            type: Sequelize.STRING
+        },
+
         location: {
             type: Sequelize.STRING
         }, 
 
         duration: {
-            type: Sequelize.INTEGER
+            type: Sequelize.STRING
         },
 
         fee: {
@@ -23,7 +27,15 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
 
+        contactPerson: {
+            type: Sequelize.STRING
+        },
+
         category: {
+            type: Sequelize.STRING
+        },
+
+        picture: {
             type: Sequelize.STRING
         }
     })

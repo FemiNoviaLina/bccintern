@@ -22,6 +22,10 @@ module.exports = (sequelize, Sequelize) => {
         fee: {
             type: Sequelize.INTEGER,
             allowNull: false
+        },
+
+        picture: {
+            type: Sequelize.STRING
         }
     })
 

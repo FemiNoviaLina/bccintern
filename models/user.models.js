@@ -21,6 +21,10 @@ module.exports = (sequelize, Sequelize) => {
             set(value) {
                 this.setDataValue('password', bcrypt.hashSync(value))
             }
+        },
+
+        picture: {
+            type: Sequelize.STRING
         }
     })
 

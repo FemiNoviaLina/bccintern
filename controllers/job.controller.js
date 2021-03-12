@@ -5,11 +5,13 @@ const User = db.users
 const user_job = db.user_job
 
 function createJob(req, res, next) {
-    console.log(req.user.id)
     Job.create(req.body) 
         .then(data => {
             data.createdById = req.user.id
-            data.save({ fields: ['createdById']})
+            if(req.file.path) {
+                data.picture = req.file.path
+            }
+            data.save({ fields: ['createdById', 'picture']})
             res.status(200).send({
                 message: 'Job created successfully',
                 status: 'success',

@@ -2,8 +2,9 @@ const router = require('express').Router()
 const jobController = require('../controllers/job.controller')
 const joiMiddleware = require('../middlewares/joiValidators')
 const jwtMiddleware = require('../middlewares/jwtAuth')
+const multerMiddleware = require('../middlewares/multer')
 
-router.post('/create',jwtMiddleware, joiMiddleware, jobController.createJob)
+router.post('/create',jwtMiddleware, multerMiddleware, joiMiddleware, jobController.createJob)
 
 router.get('/showAll', jobController.showAllJob)
 
