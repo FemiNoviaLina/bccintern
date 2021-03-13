@@ -10,8 +10,6 @@ router.get('/getById/:id', mentorController.viewMentor)
 
 router.get('/showAll', mentorController.showAllMentor)
 
-router.delete('/clearMentorDb', mentorController.clearAllMentor)
-
 router.get('/searchBySkill/:skill', mentorController.mentorBySkill)
 
 router.put('/pickMentor/', jwtMiddleware, mentorController.pickMentor)

@@ -2,8 +2,6 @@ const db = require('../models')
 const User = db.users
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const multer = require('multer')
-
 
 function registerUser(req, res, next) {
     User.create(req.body)
@@ -100,24 +98,9 @@ function addPhoto(req, res, next) {
         })
 }
 
-function clearAllUser(req, res, next) {
-    User.destroy({where:{}})
-        .then(resolved => {
-            res.status(200).send({
-                message: `${resolved} row cleared successfully`,
-                status: 'success',
-                data: {}
-            })
-        })
-        .catch(reject => {
-            next(reject)
-        })
-}
-
 module.exports = {
     registerUser,
     loginUser,
     showUserById,
-    addPhoto,
-    clearAllUser
+    addPhoto
 }

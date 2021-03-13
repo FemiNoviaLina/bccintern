@@ -348,20 +348,6 @@ function jobDoneByUser(req, res, next) {
         })
 }
 
-function clearAllJobs(req, res, next) {
-    Job.destroy({truncate: true})
-        .then(resolved => {
-            res.status(200).send({
-                message: `${resolved} row cleared successfully`,
-                status: 'success',
-                data: {}
-            })
-        })
-        .catch(reject => {
-            next(reject)
-        })
-}
-
 function updateJob(req, res, next) {
     Promise.all([Job.update(req.body, {where: {id: req.params.id}}), Job.findByPk(req.params.id)])
         .then(data => {
@@ -395,6 +381,5 @@ module.exports = {
     viewApplier,
     setWorker,
     jobDoneByUser,
-    updateJob,
-    clearAllJobs
+    updateJob
 }

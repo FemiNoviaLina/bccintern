@@ -12,6 +12,4 @@ router.get('/getById/:id', userController.showUserById)
 
 router.put('/addPhoto/:id', multerMiddleware, userController.addPhoto)
 
-router.delete('/clearUserDb', userController.clearAllUser)
-
 module.exports = router

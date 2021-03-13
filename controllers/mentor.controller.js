@@ -105,20 +105,6 @@ function addPhoto(req, res, next) {
         })
 }
 
-function clearAllMentor(req, res, next) {
-    Mentor.destroy({truncate: true})
-        .then(resolved => {
-            res.status(200).send({
-                message: `${resolved} row cleared successfully`,
-                status: 'success',
-                data: {}
-            })
-        })
-        .catch(reject => {
-            next(reject)
-        })
-}
-
 module.exports = {
     inputMentor,
     viewMentor,
@@ -126,5 +112,4 @@ module.exports = {
     mentorBySkill,
     pickMentor,
     addPhoto,
-    clearAllMentor
 }

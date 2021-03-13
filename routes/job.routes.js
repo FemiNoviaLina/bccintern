@@ -28,8 +28,6 @@ router.put('/setWorker/:jobId/:userId', jwtMiddleware, jobController.setWorker)
 
 router.get('/history/:id', jobController.jobDoneByUser)
 
-router.delete('/clearJobDb', jobController.clearAllJobs)
-
 router.put('/updateJob/:id', multerMiddleware, jobController.updateJob)
 
 router.use('/', (req, res) => {
