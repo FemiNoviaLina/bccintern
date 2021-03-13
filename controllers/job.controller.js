@@ -355,8 +355,8 @@ function updateJob(req, res, next) {
             if(req.file) {
                 let name = req.file.path.split("/")
                 jobData.picture = name[name.length - 1]
+                jobData.save({ fields: ['picture']})
             }
-            jobData.save({ fields: ['picture']})
             res.status(200).send({
                 message: `Job data with id ${req.params.id} succesfully updated`,
                 status: 'success',
