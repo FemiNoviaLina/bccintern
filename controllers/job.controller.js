@@ -357,15 +357,19 @@ function updateJob(req, res, next) {
                 jobData.picture = name[name.length - 1]
                 jobData.save({ fields: ['picture']})
             }
-            res.status(200).send({
-                message: `Job data with id ${req.params.id} succesfully updated`,
-                status: 'success',
-                data: jobData
-            })
         })
         .catch(err => {
             next(err)
         })
+    
+        Job.findByPk(req.params.id)
+            .then(data => {
+                res.status(200).send({
+                    message: 'Job updated succesfully',
+                    status: 'success',
+                    data: data
+                })
+            })
 }
 
 module.exports = {
